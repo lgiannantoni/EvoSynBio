@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="http://www.cad.polito.it/ugp3/transforms/constraintsScripted.xslt"?>
+<constraints
+        xmlns="http://www.cad.polito.it/ugp3/schemas/constraints"
+        id="One-Max" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.cad.polito.it/ugp3/schemas/constraints http://www.cad.polito.it/ugp3/schemas/constraints.xsd
+http://www.cad.polito.it/ugp3/schemas/constraints ">
+  <commentFormat>
+    <value/>
+  </commentFormat>
+  <identifierFormat>n
+    <value/>
+  </identifierFormat>
+  <labelFormat><value/>:
+  </labelFormat>
+  <uniqueTagFormat>
+    <value/>
+  </uniqueTagFormat>
+  <prologue id="globalPrologue"/>
+  <epilogue id="globalEpilogue"/>
+  <sections>
+    <section id="placing_section" prologueEpilogueCompulsory="false">
+      <prologue id="sectionPrologue"/>
+      <epilogue id="sectionEpilogue"/>
+      <subSections>
+        <subSection id="placing_subsection" maxOccurs="1" minOccurs="1" maxReferences="0">
+          <prologue id="stringPrologue">
+            <expression>
+cell placing</expression>
+          </prologue>
+          <epilogue id="stringEpilogue"/>
+          <macros minOccurs="1" maxOccurs="15" averageOccurs="8" sigma="2">
+            <macro id="coords">
+              <expression>
+(<param ref="x"/>,<param ref="y"/>,<param ref="z"/>)</expression>
+              <parameters>
+                  <item name="x" type="integer" minimum="0" maximum="199" />
+                  <item name="y" type="integer" minimum="0" maximum="199" />
+                  <item name="z" type="integer" minimum="3" maximum="3" />
+              </parameters>
+            </macro>
+          </macros>
+        </subSection>
+      </subSections>
+    </section>
+    <section id="protocol_section" prologueEpilogueCompulsory="false">
+      <prologue id="stringPrologue">
+        <expression>
+protocol</expression>
+      </prologue>
+      <epilogue id="sectionEpilogue"/>
+      <subSections>
+        <subSection id="protocol_subsection" maxOccurs="300" minOccurs="300" maxReferences="0">
+            <prologue id="stringPrologue">
+                <expression>
+*</expression>
+            </prologue>
+            <epilogue id="stringEpilogue"/>
+            <macros minOccurs="0" maxOccurs="50" averageOccurs="15" sigma="5">
+                <macro id="gf_high">
+                    <expression>
+GF HIGH (<param ref="x"/>,<param ref="y"/>,<param ref="z"/>)</expression>
+                    <parameters>
+                        <item name="x" type="integer" minimum="0" maximum="199" />
+                        <item name="y" type="integer" minimum="0" maximum="199" />
+                        <item name="z" type="integer" minimum="3" maximum="3" />
+                    </parameters>
+                </macro>
+                <macro id="gf_low">
+                    <expression>
+GF LOW (<param ref="x"/>,<param ref="y"/>,<param ref="z"/>)</expression>
+                    <parameters>
+                        <item name="x" type="integer" minimum="0" maximum="199" />
+                        <item name="y" type="integer" minimum="0" maximum="199" />
+                        <item name="z" type="integer" minimum="3" maximum="3" />
+                    </parameters>
+                </macro>
+                <macro id="trail">
+                    <expression>
+Trail 1 (<param ref="x"/>,<param ref="y"/>,<param ref="z"/>)</expression>
+                    <parameters>
+                        <item name="x" type="integer" minimum="0" maximum="199" />
+                        <item name="y" type="integer" minimum="0" maximum="199" />
+                        <item name="z" type="integer" minimum="3" maximum="3" />
+                    </parameters>
+                </macro>
+            </macros>
+        </subSection>
+      </subSections>
+    </section>
+  </sections>
+</constraints>

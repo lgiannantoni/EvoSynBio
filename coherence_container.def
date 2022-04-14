@@ -1,0 +1,176 @@
+Bootstrap: library
+From: debian:latest
+Stage: build
+
+%labels
+OWNER Leonardo Giannantoni
+
+%setup
+
+%post -c /bin/bash
+
+export DEBIAN_FRONTEND=noninteractive
+
+# make print colour #
+GREEN=$(tput setaf 2)
+RED=$(tput setaf 1)
+NOCOLOUR=$(tput sgr0)
+
+PACKAGES=/packages
+COHERENCE=/packages/coherence
+EXPERIMENTS=$COHERENCE/experiments
+
+echo "${GREEN}~~~ Installing dependencies ~~~ ${NOCOLOUR}"
+apt-get -y update
+apt-get -y upgrade
+apt-get -y install build-essential \
+apt-utils \
+zlib1g \
+zlib1g-dev \
+liblzma-dev \
+cmake \
+wget \
+bzip2 \
+devscripts \
+squashfs-tools \
+git \
+git-buildpackage \
+libncurses5-dev \
+libgdbm-dev \
+libnss3-dev \
+libssl-dev \
+libsqlite3-dev \
+libreadline-dev \
+libffi-dev \
+curl \
+libbz2-dev \
+binutils \
+qt4-default \
+unzip \
+python3-venv \
+virtualenv \
+python3-virtualenv \
+vim \
+screen
+
+
+# give all files 774 and directories 775 by default
+echo "${GREEN}~~~ Changing permissions (774 for files, 775 for directories) ~~~ ${NOCOLOUR}"
+umask 002
+
+mkdir $PACKAGES
+cd $PACKAGES
+
+
+echo "${GREEN}~~~ Installing microgp3 ~~~ ${NOCOLOUR}"
+git clone https://github.com/squillero/microgp3.git
+(
+cd microgp3/src || exit
+echo "${GREEN}~~~ Making microgp3 package ~~~ ${NOCOLOUR}"
+sed -i '34 a #include <functional>' ./Libs/EvolutionaryCore/Evaluator.h
+sed -i '40 a #include <functional>' ./Libs/EvolutionaryCore/CandidateSelection.h
+cmake -DCMAKE_BUILD_TYPE=DEBUG -DCMAKE_INSTALL_PREFIX:PATH=$HOME .
+make && make install
+mv $HOME/bin/ugp3 /opt
+mv $HOME/bin/ugp3-extractor /opt
+)
+rm -rf $PACKAGES/microgp3
+echo "${GREEN}~~~ microgp3 installed ~~~ ${NOCOLOUR}"
+
+
+echo "${GREEN}~~~ Installing Python-3.9.5 ~~~ ${NOCOLOUR}"
+wget https://www.python.org/ftp/python/3.9.5/Python-3.9.5.tgz
+tar -xf Python-3.9.5.tgz
+(
+cd Python-3.9.5 || exit
+./configure --enable-optimizations
+make -j 8
+make altinstall
+)
+#python3.9 -m pip install --upgrade pip
+rm -rf $PACKAGES/Python*
+echo "${GREEN}~~~ Python-3.9.5 installed ~~~ ${NOCOLOUR}"
+
+
+echo "${GREEN}~~~ Installing coherence ~~~ ${NOCOLOUR}"
+git clone https://github.com/leonardogian/coherence.git || exit
+virtualenv -p /usr/local/bin/python3.9 $COHERENCE/venv
+source $COHERENCE/venv/bin/activate || exit
+
+
+python -m pip install --upgrade pip
+python -m pip install -r $COHERENCE/requirements.txt
+
+echo "${GREEN}~~~ Installing custom libraries into coherence ~~~ ${NOCOLOUR}"
+
+echo "${GREEN}~~~ Installing CoSimo ~~~ ${NOCOLOUR}"
+git clone https://github.com/leonardogian/CoSimo.git
+python -m pip install -e CoSimo
+
+
+echo "${GREEN}~~~ Installing PyBoolNet ~~~ ${NOCOLOUR}"
+git clone -b 2.31.0 --depth 1 https://git@github.com/hklarner/PyBoolNet
+python -m pip install -e PyBoolNet
+
+echo "${GREEN}~~~ coherence installed in $COHERENCE ~~~ ${NOCOLOUR}"
+
+
+echo "${GREEN}~~~ Cleanup ~~~ ${NOCOLOUR}"
+apt-get clean
+rm -rf /var/lib/apt/lists/*Zz
+
+
+echo "${GREEN}~~~ Preparing container environment ~~~ ${NOCOLOUR}"
+NOW=`date`
+echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
+
+
+%environment
+export PACKAGES=/packages
+export COHERENCE=/packages/coherence
+export EXPERIMENTS=$COHERENCE/experiments
+export PATH=/opt:$PATH
+source $COHERENCE/venv/bin/activate
+
+%runscript
+# first and last lines force execution in bash instead of sh
+/bin/bash <<EOF
+echo "${GREEN}~~~ Container was created $NOW ~~~ ${NOCOLOUR}"
+echo "Arguments received: $#: $*"
+
+if [[ $# -ne 1 ]]; then
+    echo "Illegal number of parameters." >&2
+    echo "Usage:\nRun batched experiments: singularity run coherence_container.sif --batch\nRun single experiment: singularity run coherence_container.sif experiment_folder_name" >&2
+    exit 2
+fi
+
+if [[ $1 -eq "--batch" ]]; then
+    echo "${GREEN}~~~ Running batch experiments ~~~ ${NOCOLOUR}"
+    cd $EXPERIMENTS
+    ./run_batch.sh
+else
+    if [[ -d $EXPERIMENTS/$1 ]]; then
+        cd $COHERENCE
+        echo "${GREEN}~~~ Running experiment $1 ~~~ ${NOCOLOUR}"
+        ./coherence.sh $EXPERIMENTS/$1
+    else
+        echo "Experiment $1 not found in $EXPERIMENTS." >&2
+        exit 2
+    fi
+fi
+EOF
+
+
+%startscript
+echo "startscript"
+
+
+%test
+echo "${GREEN}~~~ Test ~~~ ${NOCOLOUR}"
+cat /etc/os-release
+python3.9 --version
+
+
+%labels
+Author leonardo.giannantoni@gmail.com
+Version v0.0.1
