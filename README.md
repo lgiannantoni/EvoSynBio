@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/481639977.svg)](https://zenodo.org/badge/latestdoi/481639977)
+
 Coherence - co-simulation-based optimization of biofabrication protocols
 ========================================================================
 
