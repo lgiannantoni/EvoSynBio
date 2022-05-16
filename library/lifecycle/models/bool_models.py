@@ -88,7 +88,7 @@ class BoolModel(IModel, NodeMixin):
 
     @staticmethod
     def is_false(cond: Dict[AnyStr, int], state: Dict[AnyStr, int]):
-        return BoolModel.is_true(cond, state)
+        return not BoolModel.is_true(cond, state)
 
     @classmethod
     def draw(cls, name=None, path="."):
