@@ -44,7 +44,7 @@ The following instructions help you build a Singularity container for running co
 ### Setup
 1. If Singularity is not installed in your system, open a shell and run
    ~~~~ bash
-   wget https://raw.githubusercontent.com/smilies-polito/coherence/master/singularity_install.sh && \
+   wget https://raw.githubusercontent.com/lgiannantoni/evosynbio/master/singularity_install.sh && \
    sudo chmod +x singularity_install.sh && \
    sudo ./singularity_install.sh
    ~~~~
@@ -52,7 +52,7 @@ The following instructions help you build a Singularity container for running co
 2. Then get the container definition and build it.
    > This step is going to take a few minutes to complete.
    ~~~~ bash
-   wget https://raw.githubusercontent.com/smilies-polito/coherence/master/coherence_container.def && \
+   wget https://raw.githubusercontent.com/lgiannantoni/evosynbio/master/coherence_container.def && \
    singularity build --fakeroot coherence_container.sif coherence_container.def
    ~~~~
 
@@ -64,7 +64,7 @@ The following instructions help you build a Singularity container for running co
    mkdir ~/workspace
    ~~~~
    
-   You can [download the provided examples](https://raw.githubusercontent.com/smilies-polito/coherence/master/experiments.zip) and unzip them into your `workspace` folder. Alternatively, you can set up your own experiments based on the [README](experiments/README).
+   You can [download the provided examples](https://raw.githubusercontent.com/lgiannantoni/evosynbio/master/experiments.zip) and unzip them into your `workspace` folder. Alternatively, you can set up your own experiments based on the [README](experiments/README).
 
 ### Usage
 
@@ -144,7 +144,7 @@ The following sections guide you through the installation of coherence and all i
 
    3. Get coherence
       ~~~~ bash
-      git clone https://github.com/smilies-polito/coherence.git && \
+      git clone https://github.com/lgiannantoni/evosynbio.git && \
       virtualenv -p /usr/bin/python3.9 coherence/venv && \
       source coherence/venv/bin/activate && \
       python -m pip install -r coherence/requirements.txt
@@ -214,18 +214,16 @@ The following sections guide you through the installation of coherence and all i
 Leonardo Giannantoni
 
 Politecnico di Torino - Control and Computer Engineering Department <br/>
-PhD Candidate @ SMILIES group
+PhD Candidate
 
-<img src="https://www.smilies.polito.it/email_signature/smilies.png" alt="smilies research group logo"/>
    
 **E**:    leonardo.giannantoni@polito.it <br/>
 **P**:    +39 011 090 7191 <br/>
 **M**:    +39 377 283 4499 <br/>
-**A**:    Corso Duca degli Abruzzi 24 10129 Torino Italy <br/>
-**W**:    https://www.smilies.polito.it     <br/>       
+**A**:    Corso Duca degli Abruzzi 24 10129 Torino Italy <br/>   
 
 ## Publications
-1. Leonardo Giannantoni, Roberta Bardini, and Stefano Di Carlo. "[A methodology for co-simulation-based optimization of biofabrication protocols](https://doi.org/10.1101/2022.01.28.478198)". IWBBIO 2022.
+1. Leonardo Giannantoni, et al. "[A methodology for co-simulation-based optimization of biofabrication protocols](https://doi.org/10.1101/2022.01.28.478198)". IWBBIO 2022.
 
 The experiment presented in this paper is available in the [*half*](experimental_results/half) folder, together with the results.
 
@@ -233,7 +231,7 @@ The experiment presented in this paper is available in the [*half*](experimental
 
 **APA**
    
-      Giannantoni, L. (2022). Coherence (Version 1.0.0) [Computer software]. https://github.com/smilies-polito/coherence
+      Giannantoni, L. (2022). Coherence (Version 1.0.0) [Computer software]. https://github.com/lgiannantoni/evosynbio
 
 **BibTeX**
 
@@ -241,7 +239,7 @@ The experiment presented in this paper is available in the [*half*](experimental
       author = {Giannantoni, Leonardo},
       month = {4},
       title = {{coherence}},
-      url = {https://github.com/smilies-polito/coherence},
+      url = {https://github.com/lgiannantoni/evosynbio},
       version = {1.0.0},
       year = {2022}
       }
